@@ -58,11 +58,18 @@ fun CalculadoraScreen() {
             Display(displayText)
             Teclado { input ->
                 when {
-                    input in listOf("+", "-", "*", "/", "C", "√", "^", "%") -> {
+                    input in listOf("+", "-", "*", "/", "√", "^", "%") -> {
                         // Configura o operador quando clicado
                         if (primeiroValor.isNotEmpty()) {
                             operador = input
                         }
+                    }
+                    input == "C"->{
+                        displayText = "0"
+                        primeiroValor = ""
+                        segundoValor = ""
+                        operador = ""
+
                     }
                     input == "=" -> {
                         // Realiza o cálculo ao clicar "="
@@ -151,7 +158,6 @@ fun processarEntrada(primeiroValor: String?, segundoValor: String?, operador: St
     }
     return try {
         when (operador) {
-            "C" -> (primeiroValor.toDouble() + segundoValor.toDouble()).toString()
             "√" -> sqrt(primeiroValor.toDouble()).toString()
             "^" -> (primeiroValor.toDouble() . pow(segundoValor.toDouble())).toString()
             "%" -> (primeiroValor.toDouble() * segundoValor.toDouble()/100).toString()
