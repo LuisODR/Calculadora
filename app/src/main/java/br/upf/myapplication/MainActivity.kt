@@ -44,6 +44,8 @@ fun CalculadoraScreen() {
     var segundoValor by rememberSaveable { mutableStateOf("") }
     var operador by rememberSaveable { mutableStateOf("") }
     var displayText by rememberSaveable { mutableStateOf("0") }
+    var historico by rememberSaveable { mutableStateOf<List<String>>(emptyList()) }
+
     CalculadoraTheme {
         Column(
             modifier = Modifier
@@ -51,7 +53,7 @@ fun CalculadoraScreen() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween) {
 
-            Historico()
+            Historico(historico)
 
 
 
@@ -74,10 +76,13 @@ fun CalculadoraScreen() {
                     input == "=" -> {
                         // Realiza o cálculo ao clicar "="
                         if (primeiroValor.isNotEmpty() && segundoValor.isNotEmpty() && operador.isNotEmpty()) {
-                            displayText = processarEntrada(primeiroValor, segundoValor, operador)
+                            val resultado = processarEntrada(primeiroValor, segundoValor, operador)
+                            displayText = resultado
+                            historico = historico + listOf("$primeiroValor $operador $segundoValor = $resultado")
                             primeiroValor = displayText
                             segundoValor = ""
                             operador = ""
+
                         }
                     }
                     else -> {
@@ -99,8 +104,24 @@ fun CalculadoraScreen() {
 
 
 @Composable
-fun Historico() {
-
+fun Historico(historico: List<String>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Histórico:",
+            style = MaterialTheme.typography.titleMedium
+        )
+        historico.forEach { operacao ->
+            Text(
+                text = operacao,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+        }
+    }
 }
 
 @Composable
